@@ -94,16 +94,20 @@
  * @command setAutoBattleCmdState
  * @desc Sets the new value of the parameter stateId
  * @arg stateId
+ * @type number
+ * @min 1
  * @desc The id of the state added by the auto battle command
  *
  * @command setAutoBattleCmdText
  * @desc Sets the new value of the parameter text
  * @arg text
+ * @type string
  * @desc The auto battle command name
  *
  * @command setCanUseAutoBattleCmd
  * @desc Sets the new value of the parameter canUse
  * @arg canUse
+ * @type boolean
  * @desc Whether the auto battle command can be used
  *
  * @help
