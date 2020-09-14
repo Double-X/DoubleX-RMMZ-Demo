@@ -1597,7 +1597,7 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
     }); // v0.00a - v0.00a
 
     rewriteFunc("drawText", function(text, x, y, maxWidth, lineHeight, align) {
-        const { context, context: { alpha } } = this;
+        const { context } = this, alpha = context.globalAlpha;
         maxWidth = maxWidth || 0xffffffff;
         // Edited to help plugins alter the text align behaviors in better ways
         const tx = NEW._drawnTextX.call(this, align, x, maxWidth);
