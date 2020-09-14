@@ -1,4 +1,5 @@
 IMPORTANT: YOU MUST OWN A LEGEL COPY OF THE RMMZ SOFTWARE TO USE THIS DEMO
+
 Installation Instructions:
 1. Create a new RMMZ project
 2. Download this repositroy as a zipped file
