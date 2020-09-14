@@ -1,2 +1,5 @@
-# DoubleX-RMMZ-Demo
-A demo for most of my easy, simple and small RMMZ plugins
+Installation Instructions:
+
+    Create a new RMMV project
+    Download this repository as a zipped file
+    Unzip the zipped file into that new RMMV project(After clicking into the "DoubleX-RMMZ-Demo--master" folder)
