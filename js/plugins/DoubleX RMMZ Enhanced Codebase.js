@@ -5383,10 +5383,10 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
      * @enum @param {number} horz - 4 for left/6 for right
      * @enum @param {number} vert - 2 for down/8 for up
      */
-    NEW._onMoveDiagonalSuc = function(horz, vert) {
+    NEW._onMoveDiagonallySuc = function(horz, vert) {
         NEW._updateDiagonalXY.call(this, horz, vert);
         this.increaseSteps();
-    }; // NEW._onMoveDiagonalSuc
+    }; // NEW._onMoveDiagonallySuc
 
     /**
      * The this pointer is Game_Interpreter.prototype
