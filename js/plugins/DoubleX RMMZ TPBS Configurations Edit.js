@@ -1351,7 +1351,7 @@ if (DoubleX_RMMZ.Enhanced_Codebase) {
         const [regex, notePairs] = [NEW._REG_EXP_NOTE, NEW.NOTETAG_PAIRS];
         MZ_EC.onLoadDataNotetags.call(
                 this, obj, datumType, regex, notePairs, "tpbsCfgEdit");
-    };
+    }; // NEW._loadDataNotetags
 
 })(DataManager, DoubleX_RMMZ.Enhanced_Codebase,
         DoubleX_RMMZ.TPBS_Configurations_Edit);

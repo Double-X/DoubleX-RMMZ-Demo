@@ -517,7 +517,7 @@ if (DoubleX_RMMZ.Enhanced_Codebase) {
         const [regex, notePairs] = [NEW._REG_EXP_NOTE, NEW.NOTETAG_PAIRS];
         MZ_EC.onLoadDataNotetags.call(
                 this, obj, datumType, regex, notePairs, "stateTriggers");
-    };
+    }; // NEW._loadDataNotetags
 
 })(DataManager, DoubleX_RMMZ.Enhanced_Codebase, DoubleX_RMMZ.State_Triggers);
 

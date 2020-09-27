@@ -1202,7 +1202,7 @@ if (DoubleX_RMMZ.Enhanced_Codebase && DoubleX_RMMZ.Unit_Filters) {
         const [regex, notePairs] = [NEW._REG_EXP_NOTE, NEW.NOTETAG_PAIRS];
         MZ_EC.onLoadDataNotetags.call(
                 this, obj, datumType, regex, notePairs, "targetingAI");
-    };
+    }; // NEW._loadDataNotetags
 
 })(DataManager, DoubleX_RMMZ.Enhanced_Codebase, DoubleX_RMMZ.Targeting_AI);
 
