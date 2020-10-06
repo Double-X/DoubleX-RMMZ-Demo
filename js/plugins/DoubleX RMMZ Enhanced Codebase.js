@@ -372,6 +372,8 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
  *         non null in some cases)
  *----------------------------------------------------------------------------*/
 
+/*============================================================================*/
+
 (MZ_EC => {
 
     "use strict";
@@ -447,8 +449,8 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
     CORE._ARRAY_VAL_SEPARATOR = "|", CORE._BOOL_ARRAY_VAL = entry => {
         return entry.split(CORE._ARRAY_VAL_SEPARATOR).fastMap(CORE._BOOL_VAL);
     }; // CORE._BOOL_ARRAY_VAL
-    CORE._NUM_VAL = entry => +entry, CORE._NUM_ARRAY_VAL = entry => {
-        return entry.split(CORE._ARRAY_VAL_SEPARATOR).fastMap(CORE._NUM_VAL);
+    CORE._NUM_ARRAY_VAL = entry => {
+        return entry.split(CORE._ARRAY_VAL_SEPARATOR).fastMap(Number);
     }; // CORE._NUM_ARRAY_VAL
     CORE._STRING_VAL = entry => entry;
     CORE._STRING_ARRAY_VAL = entry => entry.split(CORE._ARRAY_VAL_SEPARATOR);
@@ -460,7 +462,7 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
             case MZ_EC.BOOL_ENTRY: return CORE._BOOL_VAL.bind(undefined, entry);
             case MZ_EC.BOOL_ARRAY_ENTRY: {
                 return CORE._BOOL_ARRAY_VAL.bind(undefined, entry);
-            } case MZ_EC.NUM_ENTRY: return CORE._NUM_VAL.bind(undefined, entry);
+            } case MZ_EC.NUM_ENTRY: return Number.bind(undefined, entry);
             case MZ_EC.NUM_ARRAY_ENTRY: {
                 return CORE._NUM_ARRAY_VAL.bind(undefined, entry);
             } case MZ_EC.STRING_ENTRY: {
@@ -917,7 +919,7 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
 
 })(DoubleX_RMMZ.Enhanced_Codebase);
 
-/*============================================================================*/
+/*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------
  *    ## Core
@@ -1530,6 +1532,43 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
      */
     NEW._onCreateEffekseerContextErr = function(e) { this._app = null; };
 
+    /**
+     * The this pointer is Graphics
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current target rendering loop FPS
+     */
+    NEW._getRenderFps = function() { return this._app.ticker.FPS; };
+
+    /**
+     * The this pointer is Graphics
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} renderFps - The new target rendering loop FPS
+     */
+    NEW._setRenderFps = function(renderFps) {
+        const { ticker } = this._app;
+        ticker.maxFPS = ticker.minFPS = renderFps;
+    }; // NEW._setRenderFps
+
+    /**
+     * The this pointer is Graphics
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current target game loop FPS
+     */
+    NEW._getGameFps = function() { return PIXI.settings.TARGET_FPMS * 1000.0; };
+
+    /**
+     * The this pointer is Graphics
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} gameFps - The new target game loop FPS
+     */
+    NEW._setGameFps = function(gameFps) {
+        PIXI.settings.TARGET_FPMS = gameFps / 1000.0;
+    }; // NEW._setGameFps
+
 })(Graphics, DoubleX_RMMZ.Enhanced_Codebase);
 
 /*----------------------------------------------------------------------------
@@ -1763,6 +1802,50 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
         this.texture.frame = new Rectangle();
     }; // NEW._onRefreshWithBaseTextureErr
 
+    /**
+     * The this pointer is Sprite.prototype
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current width of this sprite
+     */
+    NEW._getWidth = function() { return this._frame.width; };
+
+    /**
+     * The this pointer is Sprite.prototype
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} val - The new width of this sprite
+     */
+    NEW._setWidth = function(val) {
+        // Added to stop refreshing the sprite when its width remain unchanged
+        if (this._frame.width === val) return;
+        //
+        this._frame.width = val;
+        this._refresh();
+    }; // NEW._setWidth
+
+    /**
+     * The this pointer is Sprite.prototype
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current height of this sprite
+     */
+    NEW._getHeight = function() { return this._frame.height; };
+
+    /**
+     * The this pointer is Sprite.prototype
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} val - The new height of this sprite
+     */
+    NEW._setHeight = function(val) {
+        // Added to stop refreshing the sprite when its height remain unchanged
+        if (this._frame.height === val) return;
+        //
+        this._frame.height = val;
+        this._refresh();
+    }; // NEW._setHeight
+
 })(Sprite.prototype, DoubleX_RMMZ.Enhanced_Codebase);
 
 /*----------------------------------------------------------------------------
@@ -1927,9 +2010,14 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
 
     "use strict";
 
-    const { rewriteAccessor } = MZ_EC.setKlassContainer("Window", $, MZ_EC);
+    const {
+        NEW,
+        rewriteAccessor
+    } = MZ_EC.setKlassContainer("Window", $, MZ_EC);
 
-    rewriteAccessor("width", function() { return this._width; }, function(val) {
+    rewriteAccessor("width", NEW._getWidth = function() {
+        return this._width;
+    }, NEW._setWidth = function(val) {
         // Added to fix redundant refresh with width unchanged
         if (this._width === val) return;
         //
@@ -1938,9 +2026,9 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
         //
     }); // v0.00a - v0.00a
 
-    rewriteAccessor("height", function() {
+    rewriteAccessor("height", NEW._getHeight = function() {
         return this._height;
-    }, function(val) {
+    }, NEW._setHeight = function(val) {
         // Added to fix redundant refresh with height unchanged
         if (this._height === val) return;
         //
@@ -1949,9 +2037,9 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
         //
     }); // v0.00a - v0.00a
 
-    rewriteAccessor("padding", function() {
+    rewriteAccessor("padding", NEW._getPadding = function() {
         return this._padding;
-    }, function(val) {
+    }, NEW._setPadding = function(val) {
         // Added to fix redundant refresh with padding unchanged
         if (this._padding === val) return;
         //
@@ -1960,9 +2048,9 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
         //
     }); // v0.00a - v0.00a
 
-    rewriteAccessor("margin", function() {
+    rewriteAccessor("margin", NEW._getMargin = function() {
         return this._margin;
-    }, function(val) {
+    }, NEW._setMargin = function(val) {
         // Added to fix redundant refresh with margin unchanged
         if (this._margin === val) return;
         //
@@ -1970,6 +2058,98 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
         this._refreshAllParts();
         //
     }); // v0.00a - v0.00a
+
+    /**
+     * The this pointer is Window.prototype
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current width of this window
+     */
+    NEW._getWidth = function() { return this._width; };
+
+    /**
+     * The this pointer is Window.prototype
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} val - The new width of this window
+     */
+    NEW._setWidth = function(val) {
+        // Added to fix redundant refresh with width unchanged
+        if (this._width === val) return;
+        //
+        this._width = val;
+        this._refreshAllParts();
+        //
+    }; // NEW._setWidth
+
+    /**
+     * The this pointer is Window.prototype
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current height of this window
+     */
+    NEW._getHeight = function() { return this._height; };
+
+    /**
+     * The this pointer is Window.prototype
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} val - The new height of this window
+     */
+    NEW._setHeight = function(val) {
+        // Added to fix redundant refresh with height unchanged
+        if (this._height === val) return;
+        //
+        this._height = val;
+        this._refreshAllParts();
+        //
+    }; // NEW._setHeight
+
+    /**
+     * The this pointer is Window.prototype
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current padding of this window
+     */
+    NEW._getPadding = function() { return this._padding; };
+
+    /**
+     * The this pointer is Window.prototype
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} val - The new padding of this window
+     */
+    NEW._setPadding = function(val) {
+        // Added to fix redundant refresh with padding unchanged
+        if (this._padding === val) return;
+        //
+        this._padding = val;
+        this._refreshAllParts();
+        //
+    }; // NEW._setPadding
+
+    /**
+     * The this pointer is Window.prototype
+     * Hotspot/Nullipotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @returns {number} The current margin of this window
+     */
+    NEW._getMargin = function() { return this._margin; };
+
+    /**
+     * The this pointer is Window.prototype
+     * Idempotent
+     * @author DoubleX @since v0.00a @version v0.00a
+     * @param {number} val - The new margin of this window
+     */
+    NEW._setMargin = function(val) {
+        // Added to fix redundant refresh with margin unchanged
+        if (this._margin === val) return;
+        //
+        this._margin = val;
+        this._refreshAllParts();
+        //
+    }; // NEW._setMargin
 
 })(Window.prototype, DoubleX_RMMZ.Enhanced_Codebase);
 
@@ -3501,11 +3681,12 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
 
     NEW._cachedScripts = new Map();
     /**
-     * The this pointer is Game_Interpreter.prototype
+     * The this pointer is Game_Action.prototype
      * Idempotent
      * @author DoubleX @interface @since v0.00a @version v0.00a
      * @param {Game_Battler} b - The target to have damage formula applied
      * @enum @param {number} sign - Whether it's damage or recovery(1/-1)
+     * @enum @param {string} damageFormula - The damage formumal string data
      * @returns {number?} The evaluated applied damage of skill/item to target
      */
     NEW._evalDamageFormula_ = function(b, sign, damageFormula) {
@@ -3535,6 +3716,7 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
         console.warn(`${this._item._dataClass} id:`, item.id);
         console.warn("damage formula:", item.damage.formula);
         console.warn("error:", e.toString());
+        console.warn(e.stack);
         //
     }; // NEW._onEvalDamageFormulaErr
 
@@ -5515,25 +5697,6 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
      */
     NEW.hasNextScriptLine = function() { return this.nextEventCode() === 655; };
 
-    NEW._cachedScripts = new Map();
-    /**
-     * The this pointer is Game_Interpreter.prototype
-     * Idempotent
-     * @author DoubleX @interface @since v0.00a @version v0.00a
-     * @param {string} script - The raw script string input to be evaluated
-     * @returns {*?} The result returned by the evaluated script
-     */
-    NEW.evalScript_ = function(script) {
-        if (!script) return undefined;
-        if (!$.IS_CACHE_SCRIPT) return eval(script);
-        // It's to avoid 1st call being eval and subsequent ones being functions
-        if (!NEW._cachedScripts.has(script)) {
-            NEW._cachedScripts.set(script, new Function(script));
-        }
-        return NEW._cachedScripts.get(script).call(this);
-        //
-    }; // NEW.evalScript_
-
     /**
      * The this pointer is Game_Interpreter.prototype
      * Nullipotent
@@ -5638,7 +5801,7 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
             } case 10: {
                 return $gameParty.hasItem($dataArmors[params[1]], params[2]);
             } case 11: return NEW._isButtonEventRun(params);
-            case 12: return !!NEW.evalScript_.call(this, params[1]);
+            case 12: return !!NEW.evalScriptLine_.call(this, params[1]);
             case 13: {
                 return $gamePlayer.vehicle() === $gameMap.vehicle(params[1]);
             }
@@ -5659,10 +5822,38 @@ Utils.checkRMVersion(DoubleX_RMMZ.Enhanced_Codebase.VERSIONS.codebase);
             case 1: return [$gameVariables.value(rhs), 1];
             case 2: return [rhs, Math.max(param5 - rhs + 1, 1)];
             case 3: return [this.gameDataOperand(rhs, param5, params[6]), 1];
-            case 4: return [NEW.evalScript_.call(this, rhs), 1];
+            case 4: return [NEW.evalScriptLine_.call(this, rhs), 1];
             default: return [0, 1];
         }
     }; // NEW._varValRandMax
+
+    /**
+     * The this pointer is Game_Interpreter.prototype
+     * @author DoubleX @interface @since v0.00a @version v0.00a
+     * @param {string} scriptLine - The raw script string input to be evaluated
+     * @returns {*?} The result returned by the evaluated script
+     */
+    NEW.evalScriptLine_ = function(scriptLine) {
+        return NEW.evalScript_.call(this, scriptLine);
+    }; // NEW.evalScriptLine_
+
+    NEW._cachedScripts = new Map();
+    /**
+     * The this pointer is Game_Interpreter.prototype
+     * @author DoubleX @interface @since v0.00a @version v0.00a
+     * @param {string} script - The raw script string input to be evaluated
+     * @returns {*?} The result returned by the evaluated script
+     */
+    NEW.evalScript_ = function(script) {
+        if (!script) return undefined;
+        if (!$.IS_CACHE_SCRIPT) return eval(script);
+        // It's to avoid 1st call being eval and subsequent ones being functions
+        if (!NEW._cachedScripts.has(script)) {
+            NEW._cachedScripts.set(script, new Function(script));
+        }
+        return NEW._cachedScripts.get(script).call(this);
+        //
+    }; // NEW.evalScript_
 
 })(Game_Interpreter, DoubleX_RMMZ.Enhanced_Codebase);
 

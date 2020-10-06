@@ -313,7 +313,6 @@
  * @desc The code of the key to have a custom key name keyName
  * @default
  * @param keyName
- * @type string
  * @desc The custom name of the key referring to the key code keyCode
  * @default
  */
@@ -368,8 +367,6 @@ Utils.checkRMVersion(DoubleX_RMMZ.Custom_Key_Maps.VERSIONS.codebase);
 /*----------------------------------------------------------------------------
  *    ## Core
  *----------------------------------------------------------------------------*/
-
-/*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------
  *    # Edited class: Input
@@ -545,7 +542,6 @@ Utils.checkRMVersion(DoubleX_RMMZ.Custom_Key_Maps.VERSIONS.codebase);
             this._currentState[keyName] = currentState;
         });
     }; // NEW._updateCurrentStates
-
 
 })(Input, DoubleX_RMMZ.Custom_Key_Maps);
 
