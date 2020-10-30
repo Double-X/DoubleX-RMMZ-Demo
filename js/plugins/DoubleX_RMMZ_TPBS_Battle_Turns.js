@@ -81,6 +81,7 @@
  * @target MZ
  * @plugindesc Versions: { codebase: "1.1.0", plugin: "v1.00a" }
  * Lets you set a TPBS battle turn as number of seconds or actions executed
+ * @orderAfter DoubleX_RMMZ_Enhanced_Codebase
  * @orderAfter DoubleX RMMZ Enhanced Codebase
  * @base DoubleX RMMZ Enhanced Codebase
  * @author DoubleX
@@ -217,6 +218,13 @@ if (DoubleX_RMMZ.Enhanced_Codebase) {
         NEW,
         ORIG
     } = MZ_EC.setKlassContainer("BattleManager", $, TPBSBT);
+
+    /*------------------------------------------------------------------------
+     *    New private variables
+     *------------------------------------------------------------------------*/
+    // {{*}} _battleTurns: The container of all other new variables
+    //       {number} sec: The number of seconds elapsed in the current turn
+    //       {number} act: The number of actions executed in the current turn
 
     extendFunc("initMembers", function() {
         ORIG.initMembers.apply(this, arguments);
