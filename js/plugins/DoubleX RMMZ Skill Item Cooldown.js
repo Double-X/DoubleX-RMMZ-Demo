@@ -690,28 +690,16 @@ if (DoubleX_RMMZ.Enhanced_Codebase) {
 
 /*============================================================================*/
 
-(SIC => {
+((MZ_EC, SIC) => {
 
     "use strict";
 
-    const FP = SIC.FUNC_PARAMS = {};
-
-    FP.PARAM_FUNCS = new Map();
-
-    FP._PARAM_FUNC_ARGS = new Map(Object.entries({
+    MZ_EC.setupFuncParams(SIC, {
         clearBattlerSkillItemCooldownOnBattleStart: ["actor"],
         clearBattlerSkillItemCooldownOnBattleEnd: ["actor"]
-    }));
+    });
 
-    FP.storeFuncParam = (param, val) => {
-        if (!FP._PARAM_FUNC_ARGS.has(param)) return;
-        const args = FP._PARAM_FUNC_ARGS.get(param);
-        // Using fastMerge would mutate the parameter function argument lists
-        FP.PARAM_FUNCS.set(param, new Function(...args.concat(val)));
-        //
-    }; // FP.storeFuncParam
-
-})(DoubleX_RMMZ.Skill_Item_Cooldown);
+})(DoubleX_RMMZ.Enhanced_Codebase, DoubleX_RMMZ.Skill_Item_Cooldown);
 
 /*----------------------------------------------------------------------------*/
 
